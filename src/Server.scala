@@ -9,26 +9,38 @@ import scala.swing.event.Event
 import java.net.{ServerSocket, Socket}
 import java.io._
 
-object Server extends Thread with Publisher {
-  reactions += {
-    case SocketKeyDown(uid) => {this.publish(new SocketKeyDown(uid))}
-    case SocketKeyUp(uid) => {this.publish(new SocketKeyUp(uid))}
-  }
+object Server extends Thread("Server") with Publisher {
   override def run() = {
     val listener = new ServerSocket(55000)
     while(true){
       val newClient = new ServerThread(listener.accept())
-      this.listenTo(newClient)
       newClient.start()
     }
   }
 }
 
 class ServerThread(val socket : Socket) extends Thread with Publisher {
+  val in = new DataInputStream(socket.getInputStream)
+  OneButtonGame.scr.listenTo(this)
+  if(socket.getInetAddress.isAnyLocalAddress()) println(socket.getInetAddress.getAddress)
+  val uid = "qwerty"
   override def run() = {
-    while(true){
-      
+    while(socket.isConnected()){
+      this.recv() match {
+        case "UP" => this.publish(new SocketKeyUp(uid))
+        case "DOWN" => this.publish(new SocketKeyDown(uid))
+        case _ =>
+      }
     }
+    socket.close()
+    OneButtonGame.scr.deafTo(this)
+  }
+  def recv() = {
+    var data = ""
+    do {
+      data += in.readByte().toChar
+    } while(!data.endsWith("\r\n"))
+    data.stripLineEnd
   }
 }
 

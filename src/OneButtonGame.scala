@@ -10,10 +10,9 @@ import java.awt.Toolkit
 
 object OneButtonGame extends SimpleSwingApplication {
   val scr = new Screen()
+  
   def top = new MainFrame {
     title = "OBG!!!"
-    
-    this.ignoreRepaint_=(true)    
     
     contents = scr
     
@@ -23,6 +22,7 @@ object OneButtonGame extends SimpleSwingApplication {
     this.maximize()
     Timer(20){scr.repaint()}
   }
+  Server.start()
   Timer(5){GameObjectRoot.update()}
 }
 
