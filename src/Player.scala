@@ -4,9 +4,9 @@
  * @author joonardo
  */
 
-import scala.swing.event.Key.Value
+//import scala.swing.event.Key.Value
 
-class Player(val key : Value) {
+class Player(val key : String) {
   var alive = true
   var died = 0L
   val respawnTime = 5000 //5s

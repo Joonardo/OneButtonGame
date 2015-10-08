@@ -11,7 +11,7 @@ object GameObjectRoot {
   var area = (0,0)
   //var initDone = false
   val gameObjs = Buffer[GameObject]()
-  val players = Map[Value, Player]()
+  val players = Map[String, Player]()
   var lastUpdate = System.currentTimeMillis()
   //val keys = Buffer[Int]()
   
@@ -22,7 +22,7 @@ object GameObjectRoot {
   def areaWidth = this.area._2
   def areaHeight = this.area._1
   
-  def apply(key : Value) : Player = this.players(key)
+  def apply(key : String) : Player = this.players(key)
   
   def addPlayer(p : Player) = {
     this.players += p.key -> p
