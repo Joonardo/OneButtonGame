@@ -41,7 +41,6 @@ class Screen extends Panel {
       }
     }
   }
-  }
   
   //this.self.setIgnoreRepaint(true)
   override def paintComponent(g : Graphics2D) = {
