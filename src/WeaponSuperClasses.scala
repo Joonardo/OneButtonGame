@@ -14,7 +14,7 @@ class Bullet(owner : Player, val dir : Double, var position : Vector) extends Ga
   var shouldMove = true
   velocity = Vector.polar(dir, 350) + this.owner.character.velocity
   
-  val recoil = Vector.polar(dir, 45)
+  def recoil = this.velocity.unit*45
   
   this.owner.character.velocity -= recoil
   
