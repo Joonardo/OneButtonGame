@@ -16,12 +16,16 @@ abstract class GameObject(val owner : Player) {
   def diameter = 0.0
   var velocity = Vector.normal(0, 0)
   def radius = toInt(diameter/2)
+  
   def paint(g : Graphics2D) : Unit
   def update(dt : Double) : Unit
+  
   def destroy() : Unit = this.shouldBeRemoved = true
+  
   def x = toInt(this.position.x)
   def y = toInt(this.position.y)
   def toInt(d : Double) = round(d).asInstanceOf[Int]
+  
   def checkCollision() = {
     if(this.x - this.radius < 0 || this.x + this.radius > GameObjectRoot.areaWidth){
       this.velocity = Vector.normal(-this.velocity.x, this.velocity.y)
@@ -47,7 +51,7 @@ abstract class GameObject(val owner : Player) {
 class Character(owner : Player) extends GameObject(owner) {
   var shouldMove = false
   var health = 100
-  val maxHealth = 100
+  val maxHealth = 200
   var position = Rng.getPos()
   val maxVelocity = 300.0
   var angVel = 0.0
@@ -121,6 +125,9 @@ class Character(owner : Player) extends GameObject(owner) {
     
     this.dir = this.dir % (2*Pi)
     checkCollision()
+    if(this.health > this.maxHealth){
+      this.health = this.maxHealth
+    }
   }
 }
 

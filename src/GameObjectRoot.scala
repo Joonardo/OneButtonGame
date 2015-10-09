@@ -13,6 +13,7 @@ object GameObjectRoot {
   val gameObjs = Buffer[GameObject]()
   val players = Map[Value, Player]()
   var lastUpdate = System.currentTimeMillis()
+  var nextPowerupSpawnTime = Rng.nextPowerupSpawnTime
   //val keys = Buffer[Int]()
   
   def addGameObject(go : GameObject) = {
@@ -46,6 +47,11 @@ object GameObjectRoot {
     }
     
     this.gameObjs --= removed
+    
+    if(System.currentTimeMillis() > this.nextPowerupSpawnTime){
+      this.gameObjs += Powerup.random()
+      this.nextPowerupSpawnTime = Rng.nextPowerupSpawnTime
+    }
     
     this.lastUpdate = System.currentTimeMillis()
   }
