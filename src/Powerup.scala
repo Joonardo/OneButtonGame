@@ -14,12 +14,28 @@ import java.awt.geom.Ellipse2D
 import javax.imageio.ImageIO
 
 abstract class Powerup extends GameObject(null) with Hittable {
+  val pic : Image
+  var position = Rng.getPos()
+  var shouldMove = false
+  var health = 30
+  override def radius = 12
   def collect(c : Character)
+  def update(dt : Double) = {
+    GameObjectRoot.gameObjs.foreach { c =>
+      if(c.isInstanceOf[Character] && (c.position - this.position).abs < c.radius + this.radius){
+        this.collect(c.asInstanceOf[Character])
+      }
+    }
+  }
+  def paint(g : Graphics2D) = {
+    g.drawImage(this.pic, this.x-10, this.y-10, null)
+  }
 }
 
 object Powerup {
   final val powerups = Buffer[Class[_]](
-    classOf[HealthPackage]
+    classOf[HealthPackage],
+    classOf[WeaponPackage]
   )
   def random() = {
     val v = round(Rng.getFloat()*(powerups.size - 1))
@@ -28,24 +44,19 @@ object Powerup {
 }
 
 class HealthPackage extends Powerup {
-  var shouldMove = false
-  var health = 30
-  override def radius = 12
   val pic = ImageIO.read(new File("src/Media/HealthPackage.png"))
-  var position = Rng.getPos()
   def collect(c : Character) = {
     c.health += 40
     this.destroy()
   }
-  def paint(g : Graphics2D) = {
-    g.drawImage(this.pic, this.x-10, this.y-10, null)
-  }
-  def update(dt : Double) = {
-    GameObjectRoot.gameObjs.foreach { c =>
-      if(c.isInstanceOf[Character] && (c.position - this.position).abs < c.radius + this.radius){
-        this.collect(c.asInstanceOf[Character])
-      }
-    }
+}
+
+class WeaponPackage extends Powerup {
+  val pic = ImageIO.read(new File("src/Media/WeaponPackage.png"))
+  val contents = classOf[Shotgun]
+  def collect(c : Character) = {
+    c.weapon = this.contents.getConstructor(classOf[Player]).newInstance(c.owner)
+    this.destroy()
   }
 }
 

@@ -73,17 +73,17 @@ class Character(owner : Player) extends GameObject(owner) with Hittable {
   def lifeTime = System.currentTimeMillis() - this.spawned
   private val shootingThreshold = 200L //ms
   
+  var weapon : Weapon = new Shotgun(this.owner)
+  
   override def destroy() = {
     super.destroy()
     this.owner.alive = false
     this.owner.died = System.currentTimeMillis()
   }
+  
+  def shoot() = this.weapon.fire()
     
   override def takeHit(dmg : Int) = if(this.lifeTime > this.spawnProtection) this.health -= dmg
-  
-  def shoot() = {
-    GameObjectRoot.addGameObject(new Bullet(this.owner, this.dir, this.position + Vector.polar(dir, this.radius*1.4)))
-  }
   
   def paint(g : Graphics2D) = {
     //Draw outer circle

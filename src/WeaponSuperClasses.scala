@@ -7,16 +7,26 @@
 import scala.swing.Graphics2D
 
 class Bullet(owner : Player, val dir : Double, var position : Vector) extends GameObject(owner) {
-  val lifetime = 2500
+  private var lifetime = 2500L
   private val born = System.currentTimeMillis()
-  private val damage = 10
+  private var damage = 10
+  private var recFactor = 45.0
+  private var velFactor = 350.0
   var timeAlive = 0
   var shouldMove = true
-  velocity = Vector.polar(dir, 350) + this.owner.character.velocity
+  velocity = Vector.polar(dir, this.velFactor) + this.owner.character.velocity
   
-  def recoil = this.velocity.unit*45
+  def recoil = this.velocity.unit*this.recFactor
   
-  this.owner.character.velocity -= recoil
+  def applyRecoil() = this.owner.character.velocity -= recoil
+  
+  def setWeaponAttr(lt : Long = 2500, dmg : Int = 10, velF : Double = 350.0, rec : Double = 45) = {
+    this.velFactor = velF
+    velocity = Vector.polar(dir, this.velFactor) + this.owner.character.velocity
+    this.lifetime = lt
+    this.damage = dmg
+    this.recFactor = rec
+  }
   
   override def paint(g : Graphics2D) = {
     g.drawLine(this.x, this.y, toInt(this.x-10*this.velocity.unit.x), toInt(this.y-10*this.velocity.unit.y))
@@ -46,9 +56,8 @@ class Bullet(owner : Player, val dir : Double, var position : Vector) extends Ga
   }
 }
 
-abstract class Weapon(owner : Player) extends GameObject(owner) {
+abstract class Weapon(owner : Player) {
   var ammo : Int
-  def fire() = {
-    this.ammo -= 1
-  }
+  def holder = owner.character
+  def fire() : Unit
 }
