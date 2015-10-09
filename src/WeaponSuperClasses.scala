@@ -29,8 +29,8 @@ class Bullet(owner : Player, val dir : Double, var position : Vector) extends Ga
     }else{
       this.position = this.position + this.velocity*dt
       GameObjectRoot.gameObjs.foreach { x => {
-        if(x.getClass == classOf[Character]){
-          val c = x.asInstanceOf[Character] 
+        if(x.isInstanceOf[Hittable]){
+          val c = x.asInstanceOf[Hittable] 
           if((this.position - c.position).abs <= c.radius){
             c.takeHit(this.damage)
             c.velocity += recoil

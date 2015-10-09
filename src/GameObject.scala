@@ -8,6 +8,15 @@ import java.awt.{Color, Graphics2D}
 import java.util.Random
 import math.{Pi, round, cos, sin, pow, abs, signum}
 
+trait Hittable {
+  def takeHit(dmg : Int) = this.health -= dmg
+  def destroy() : Unit
+  var health : Int
+  var position : Vector
+  var velocity : Vector
+  def radius : Int 
+}
+
 abstract class GameObject(val owner : Player) {
   var position : Vector
   var shouldBeRemoved = false
@@ -48,7 +57,7 @@ abstract class GameObject(val owner : Player) {
 
 
 
-class Character(owner : Player) extends GameObject(owner) {
+class Character(owner : Player) extends GameObject(owner) with Hittable {
   var shouldMove = false
   var health = 100
   val maxHealth = 200
@@ -70,7 +79,7 @@ class Character(owner : Player) extends GameObject(owner) {
     this.owner.died = System.currentTimeMillis()
   }
     
-  def takeHit(dmg : Int) = if(this.lifeTime > this.spawnProtection) this.health -= dmg
+  override def takeHit(dmg : Int) = if(this.lifeTime > this.spawnProtection) this.health -= dmg
   
   def shoot() = {
     GameObjectRoot.addGameObject(new Bullet(this.owner, this.dir, this.position + Vector.polar(dir, this.radius*1.4)))
