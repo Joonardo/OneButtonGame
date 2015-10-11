@@ -6,8 +6,8 @@
 
 TODO
 
-More weapons
-Controlling over TCP/IP sockets (Partially implemented, checkout WebEdition branch)
+More weapons (Added shotgun)
+Controlling over TCP/IP sockets (Merged, some fixes needed)
 Scoreboard
 Settings
 More game modes (not only deathmatch :P)
