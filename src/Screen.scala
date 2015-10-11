@@ -17,15 +17,27 @@ class Screen extends Panel {
     
   reactions += {
     case KeyPressed(_, kc, _, _) => {
-      if(GameObjectRoot.keys.contains(kc)){
-        GameObjectRoot(kc).keyPressed()
+      if(GameObjectRoot.keys.contains(kc.toString)){
+        GameObjectRoot(kc.toString).keyPressed()
       }else{
-        GameObjectRoot.addPlayer(new Player(kc))
+        GameObjectRoot.addPlayer(new Player(kc.toString))
       }
     }
     case KeyReleased(_, kc, _, _) => {
-      if(GameObjectRoot.keys.contains(kc)){
-        GameObjectRoot(kc).keyReleased()
+      if(GameObjectRoot.keys.contains(kc.toString)){
+        GameObjectRoot(kc.toString).keyReleased()
+      }
+    }
+    case SocketKeyDown(uid) => {
+      if(GameObjectRoot.keys.contains(uid)){
+        GameObjectRoot(uid).keyPressed()
+      }else{
+        GameObjectRoot.addPlayer(new Player(uid))
+      }
+    }
+    case SocketKeyUp(uid) => {
+      if(GameObjectRoot.keys.contains(uid)){
+        GameObjectRoot(uid).keyReleased()
       }
     }
   }
