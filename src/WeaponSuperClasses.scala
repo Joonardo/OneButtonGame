@@ -5,6 +5,7 @@
  */
 
 import scala.swing.Graphics2D
+import Utils._
 
 class Bullet(owner : Player, val dir : Double, var position : Vector) extends GameObject(owner) {
   private var lifetime = 2500L
@@ -44,8 +45,9 @@ class Bullet(owner : Player, val dir : Double, var position : Vector) extends Ga
           if((this.position - c.position).abs <= c.radius){
             c.takeHit(this.damage)
             c.velocity += recoil
-            if(c.health <= 0){
+            if(c.health <= 0 && !c.shouldBeRemoved){
               c.destroy()
+              this.owner.score += 10
             }
             this.destroy()
           }

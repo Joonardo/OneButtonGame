@@ -14,10 +14,33 @@ object GameObjectRoot {
   val players = Map[String, Player]()
   var lastUpdate = System.currentTimeMillis()
   var nextPowerupSpawnTime = Rng.nextPowerupSpawnTime
+  private val infoTxts = Map[String, Text]("Caption" -> Text("Leader", 8, alpha = 0.5))
   //val keys = Buffer[Int]()
+  
+  def infoTexts = this.infoTxts.values.toBuffer
   
   def addGameObject(go : GameObject) = {
     this.gameObjs.append(go)
+  }
+  
+  private def leaderText = {
+    val leader = getLeader
+    var txt = "Nobody"
+    if(leader.isDefined){
+      txt = leader.get.key + ": " + leader.get.score
+    }
+    Text(txt, 8, Some(this.infoTxts("Caption")), Vector.normal(0, 70), alpha = 0.5)
+  }
+  
+  private def getLeader = {
+    if(this.players.size > 0){
+      val plas = this.players.values.toBuffer
+      var leader = plas(0)
+      plas.foreach { x => if(x.score > leader.score) leader = x }
+      Some(leader)
+    }else{
+      None
+    }
   }
   
   def areaWidth = this.area._2
@@ -33,6 +56,7 @@ object GameObjectRoot {
   
   def update() = {
     this.area = OneButtonGame.scr.getSize
+    this.infoTxts("Leader") = this.leaderText 
     
     for(p <- this.players){
       p._2.tryRespawn()

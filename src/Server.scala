@@ -11,7 +11,7 @@ import java.io._
 
 object Server extends Thread("Server") {
   override def run() = {
-    val listener = new ServerSocket(55000)
+    val listener = new ServerSocket(55006)
     while(true){
       val newClient = new ServerThread(listener.accept())
       newClient.start()

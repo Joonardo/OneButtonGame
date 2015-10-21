@@ -1,5 +1,4 @@
 
-
 /**
  * @author joonardo
  */
@@ -13,7 +12,7 @@ object OneButtonGame extends SimpleSwingApplication {
   
   def top = new MainFrame {
     title = "OBG!!!"
-    
+    minimumSize = new Dimension(750, 400)
     contents = scr
     
     scr.requestFocus()

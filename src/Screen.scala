@@ -47,6 +47,10 @@ class Screen extends Panel {
     super.paintComponent(g)
     g.clearRect(0, 0, this.size.width, this.size.height)
     //super.paint(g)
+    for(txt <- GameObjectRoot.infoTexts){
+      txt.paint(g)
+    }
+    
     for (go <- GameObjectRoot.gameObjs){
       go.paint(g)
     }

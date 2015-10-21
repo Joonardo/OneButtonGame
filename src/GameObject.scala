@@ -5,12 +5,14 @@
  */
 
 import java.awt.{Color, Graphics2D}
+import Utils._
 import java.util.Random
 import math.{Pi, round, cos, sin, pow, abs, signum}
 
 trait Hittable {
   def takeHit(dmg : Int) = this.health -= dmg
   def destroy() : Unit
+  var shouldBeRemoved : Boolean
   var health : Int
   var position : Vector
   var velocity : Vector
@@ -24,7 +26,7 @@ abstract class GameObject(val owner : Player) {
   var lastUpdate = System.currentTimeMillis()
   def diameter = 0.0
   var velocity = Vector.normal(0, 0)
-  def radius = toInt(diameter/2)
+  def radius = toInt(this.diameter/2)
   
   def paint(g : Graphics2D) : Unit
   def update(dt : Double) : Unit
@@ -33,7 +35,6 @@ abstract class GameObject(val owner : Player) {
   
   def x = toInt(this.position.x)
   def y = toInt(this.position.y)
-  def toInt(d : Double) = round(d).asInstanceOf[Int]
   
   def checkCollision() = {
     if(this.x - this.radius < 0 || this.x + this.radius > GameObjectRoot.areaWidth){
@@ -73,7 +74,10 @@ class Character(owner : Player) extends GameObject(owner) with Hittable {
   def lifeTime = System.currentTimeMillis() - this.spawned
   private val shootingThreshold = 200L //ms
   
-  var weapon : Weapon = new Shotgun(this.owner)
+  val nameText = Text(this.owner.key, 1, Some(this), Vector.normal(-this.owner.key.length * FONT_WIDTH/2, -this.radius - FONT_HEIGHT - 2))
+  def scoreText = Text("" + this.owner.score, 1, Some(this), Vector.normal(-("" + this.owner.score).length*FONT_WIDTH/2, -FONT_HEIGHT/2))
+  
+  var weapon : Weapon = new Colt45(this.owner)
   
   override def destroy() = {
     super.destroy()
@@ -83,7 +87,12 @@ class Character(owner : Player) extends GameObject(owner) with Hittable {
   
   def shoot() = this.weapon.fire()
     
-  override def takeHit(dmg : Int) = if(this.lifeTime > this.spawnProtection) this.health -= dmg
+  override def takeHit(dmg : Int) = {
+    if(this.lifeTime > this.spawnProtection){
+      this.health -= dmg
+      this.nameText.position = Vector.normal(-this.owner.key.length * FONT_WIDTH/2, -this.radius - FONT_HEIGHT - 2)
+    }
+  }
   
   def paint(g : Graphics2D) = {
     //Draw outer circle
@@ -94,7 +103,9 @@ class Character(owner : Player) extends GameObject(owner) with Hittable {
       g.drawOval(this.x - 10, this.y - 10, 20, 20)
     }
     //Draw name
-    g.drawString(this.owner.key + "", this.x - this.radius - 3, this.y - this.radius - 3)
+    this.nameText.paint(g)
+    this.scoreText.paint(g)
+    //g.drawString(this.owner.key + "", this.x - this.radius - 3, this.y - this.radius - 3)
     //Draw gun
     var rMax = this.radius + 10
     var rMin = this.radius - 10
