@@ -36,7 +36,7 @@ class Bullet(owner : Player, val dir : Double, var position : Vector) extends Ga
   
   override def update(dt : Double) = {
     if(System.currentTimeMillis() - this.born > this.lifetime){
-      this.destroy()
+      this.destroy(this.owner)
     }else{
       this.position = this.position + this.velocity*dt
       GameObjectRoot.gameObjs.foreach { x => {
@@ -46,10 +46,9 @@ class Bullet(owner : Player, val dir : Double, var position : Vector) extends Ga
             c.takeHit(this.damage)
             c.velocity += recoil
             if(c.health <= 0 && !c.shouldBeRemoved){
-              c.destroy()
-              this.owner.score += 10
+              c.destroy(this.owner)
             }
-            this.destroy()
+            this.destroy(this.owner)
           }
         }
       }}

@@ -11,7 +11,7 @@ import math.{Pi, round, cos, sin, pow, abs, signum}
 
 trait Hittable {
   def takeHit(dmg : Int) = this.health -= dmg
-  def destroy() : Unit
+  def destroy(destroyer : Player) : Unit
   var shouldBeRemoved : Boolean
   var health : Int
   var position : Vector
@@ -31,7 +31,7 @@ abstract class GameObject(val owner : Player) {
   def paint(g : Graphics2D) : Unit
   def update(dt : Double) : Unit
   
-  def destroy() : Unit = this.shouldBeRemoved = true
+  def destroy(destroyer : Player) : Unit = this.shouldBeRemoved = true
   
   def x = toInt(this.position.x)
   def y = toInt(this.position.y)
@@ -79,10 +79,14 @@ class Character(owner : Player) extends GameObject(owner) with Hittable {
   
   var weapon : Weapon = new Colt45(this.owner)
   
-  override def destroy() = {
-    super.destroy()
+  override def destroy(destroyer : Player) = {
+    super.destroy(destroyer)
     this.owner.alive = false
     this.owner.died = System.currentTimeMillis()
+    if(this.owner != destroyer)
+      destroyer.score += 10
+    else
+      destroyer.score -= 20
   }
   
   def shoot() = this.weapon.fire()

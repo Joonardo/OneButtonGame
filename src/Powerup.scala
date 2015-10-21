@@ -47,7 +47,7 @@ class HealthPackage extends Powerup {
   val pic = ImageIO.read(new File("src/Media/HealthPackage.png"))
   def collect(c : Character) = {
     c.health += 40
-    this.destroy()
+    this.destroy(c.owner)
   }
 }
 
@@ -56,7 +56,7 @@ class WeaponPackage extends Powerup {
   val contents = classOf[Shotgun]
   def collect(c : Character) = {
     c.weapon = this.contents.getConstructor(classOf[Player]).newInstance(c.owner)
-    this.destroy()
+    this.destroy(c.owner)
   }
 }
 
