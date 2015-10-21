@@ -74,8 +74,12 @@ class Character(owner : Player) extends GameObject(owner) with Hittable {
   def lifeTime = System.currentTimeMillis() - this.spawned
   private val shootingThreshold = 200L //ms
   
-  val nameText = Text(this.owner.key, 1, Some(this), Vector.normal(-this.owner.key.length * FONT_WIDTH/2, -this.radius - FONT_HEIGHT - 2))
+  def nameText = Text(this.owner.key, 1, Some(this), Vector.normal(-this.owner.key.length * FONT_WIDTH/2, -this.radius - FONT_HEIGHT - 2))
   def scoreText = Text("" + this.owner.score, 1, Some(this), Vector.normal(-("" + this.owner.score).length*FONT_WIDTH/2, -FONT_HEIGHT/2))
+  def ammoText = {
+    val s = if (this.weapon.ammo == -1) "" else "" + this.weapon.ammo
+    Text(s, 1, Some(this), Vector.normal(-(this.weapon.ammo + "").length*FONT_WIDTH/2, this.radius + 2))
+  }
   
   var weapon : Weapon = new Colt45(this.owner)
   
@@ -94,7 +98,6 @@ class Character(owner : Player) extends GameObject(owner) with Hittable {
   override def takeHit(dmg : Int) = {
     if(this.lifeTime > this.spawnProtection){
       this.health -= dmg
-      this.nameText.position = Vector.normal(-this.owner.key.length * FONT_WIDTH/2, -this.radius - FONT_HEIGHT - 2)
     }
   }
   
@@ -109,6 +112,7 @@ class Character(owner : Player) extends GameObject(owner) with Hittable {
     //Draw name
     this.nameText.paint(g)
     this.scoreText.paint(g)
+    this.ammoText.paint(g)
     //g.drawString(this.owner.key + "", this.x - this.radius - 3, this.y - this.radius - 3)
     //Draw gun
     var rMax = this.radius + 10

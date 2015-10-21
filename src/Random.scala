@@ -12,5 +12,5 @@ object Rng {
   def getPos() = Vector.normal(50 + rng.nextFloat() * (GameObjectRoot.areaWidth - 100), 50 + rng.nextFloat() * (GameObjectRoot.areaHeight - 100))
   //def getInt(from : Int, to : Int) : Int = from + math.round((to - from)*rng.nextFloat())
   def getFloat() = rng.nextFloat()
-  def nextPowerupSpawnTime = System.currentTimeMillis() + 5000 + rng.nextInt(20000)
+  def nextPowerupSpawnTime = System.currentTimeMillis() + 3000 + rng.nextInt(10000)
 }

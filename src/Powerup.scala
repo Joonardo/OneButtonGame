@@ -35,7 +35,8 @@ abstract class Powerup extends GameObject(null) with Hittable {
 object Powerup {
   final val powerups = Buffer[Class[_]](
     classOf[HealthPackage],
-    classOf[WeaponPackage]
+    classOf[WeaponPackage],
+    classOf[ScorePackage]
   )
   def random() = {
     val v = round(Rng.getFloat()*(powerups.size - 1))
@@ -55,7 +56,20 @@ class WeaponPackage extends Powerup {
   val pic = ImageIO.read(new File("src/Media/WeaponPackage.png"))
   val contents = classOf[Shotgun]
   def collect(c : Character) = {
-    c.weapon = this.contents.getConstructor(classOf[Player]).newInstance(c.owner)
+    val tmp = this.contents.getConstructor(classOf[Player]).newInstance(c.owner)
+    if(c.weapon.getClass != this.contents){
+      c.weapon = tmp
+    }else{
+      c.weapon.ammo += tmp.ammo
+    }
+    this.destroy(c.owner)
+  }
+}
+
+class ScorePackage extends Powerup {
+  val pic = ImageIO.read(new File("src/Media/ScorePackage.png"))
+  def collect(c : Character) = {
+    c.owner.score += 30
     this.destroy(c.owner)
   }
 }
