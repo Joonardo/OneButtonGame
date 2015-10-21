@@ -72,7 +72,6 @@ class Character(owner : Player) extends GameObject(owner) with Hittable {
   val spawnProtection = 7000L
   override def diameter = this.health/4 + 20
   def lifeTime = System.currentTimeMillis() - this.spawned
-  private val shootingThreshold = 200L //ms
   
   def nameText = Text(this.owner.key, 1, Some(this), Vector.normal(-this.owner.key.length * FONT_WIDTH/2, -this.radius - FONT_HEIGHT - 2))
   def scoreText = Text("" + this.owner.score, 1, Some(this), Vector.normal(-("" + this.owner.score).length*FONT_WIDTH/2, -FONT_HEIGHT/2))
@@ -127,7 +126,7 @@ class Character(owner : Player) extends GameObject(owner) with Hittable {
   }
   
   def update(dt : Double) = {
-    if(this.shootingThreshold > this.owner.pressedTime.getOrElse(1000L)){
+    if(this.weapon.checkTrigger()){
       this.shoot()
     }
     

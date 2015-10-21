@@ -59,6 +59,10 @@ class Bullet(owner : Player, val dir : Double, var position : Vector) extends Ga
 
 abstract class Weapon(owner : Player) {
   var ammo : Int
+  val shootingThreshold = 200L
   def holder = owner.character
   def fire() : Unit
+  def checkTrigger() = {
+    this.shootingThreshold > this.owner.pressedTime.getOrElse(1000L)
+  }
 }
