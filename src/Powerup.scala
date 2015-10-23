@@ -12,6 +12,7 @@ import scala.swing.Graphics2D
 import java.awt.{Color, Image}
 import java.awt.geom.Ellipse2D
 import javax.imageio.ImageIO
+import Utils._
 
 abstract class Powerup extends GameObject(null) with Hittable {
   val pic : Image
@@ -54,7 +55,7 @@ class HealthPackage extends Powerup {
 
 class WeaponPackage extends Powerup {
   val pic = ImageIO.read(new File("src/Media/WeaponPackage.png"))
-  val contents = classOf[AK47]
+  val contents = WeaponsDealer.deal()
   def collect(c : Character) = {
     val tmp = this.contents.getConstructor(classOf[Player]).newInstance(c.owner)
     if(c.weapon.getClass != this.contents){
@@ -63,6 +64,17 @@ class WeaponPackage extends Powerup {
       c.weapon.ammo += tmp.ammo
     }
     this.destroy(c.owner)
+  }
+}
+
+object WeaponsDealer {
+  final private val weapons = Buffer[Class[_]](
+      classOf[AK47],
+      classOf[Shotgun]
+  )
+  
+  def deal() = {
+    this.weapons(toInt((this.weapons.length - 1)*Rng.getFloat())).asInstanceOf[Class[Weapon]]
   }
 }
 
