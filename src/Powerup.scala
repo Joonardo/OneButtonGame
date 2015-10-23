@@ -54,7 +54,7 @@ class HealthPackage extends Powerup {
 
 class WeaponPackage extends Powerup {
   val pic = ImageIO.read(new File("src/Media/WeaponPackage.png"))
-  val contents = classOf[Shotgun]
+  val contents = classOf[AK47]
   def collect(c : Character) = {
     val tmp = this.contents.getConstructor(classOf[Player]).newInstance(c.owner)
     if(c.weapon.getClass != this.contents){

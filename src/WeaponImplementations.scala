@@ -12,9 +12,7 @@ class Colt45(owner : Player) extends Weapon(owner) {
   def fire() = {
     val c = this.holder
     val p = this.owner
-    val b = new Bullet(p, c.dir, c.position + Vector.polar(c.dir, c.radius*1.4))
-    GameObjectRoot.addGameObject(b)
-    b.applyRecoil()
+    val b = new Caliper45(p, c.dir, c.position + Vector.polar(c.dir, c.radius*1.4))
   }
 }
 
@@ -27,19 +25,41 @@ class Shotgun(owner : Player) extends Weapon(owner) {
       this.holder.weapon = new Colt45(this.owner)
     }
     
-    val slugs = Buffer[Bullet]()
+    val slugs = Buffer[Slug]()
     for (_ <- 0 until 15){
       val newDir = this.holder.dir + this.scattering*(Rng.getFloat() - 1)
       val c = this.holder
       val p = this.owner
-      val b = new Bullet(p, newDir, c.position + Vector.polar(c.dir, c.radius*1.4))
-      b.setWeaponAttr(500, 10, 300.0*(Rng.getFloat() + 0.5), 10)
+      val b = new Slug(p, newDir, c.position + Vector.polar(c.dir, c.radius*1.4))
       slugs += b
     }
     for(b <- slugs){
-      GameObjectRoot.addGameObject(b)
       b.applyRecoil()
     }
+  }
+}
+
+class AK47(owner : Player) extends Weapon(owner) {
+  var ammo = 100
+  var shouldShoot = false
+  val shootingInterval = 50L
+  private var lastShot = System.currentTimeMillis()
+  override def checkTrigger() = {
+    if(this.owner.pressedTime.getOrElse(1000L) < this.shootingThreshold){
+      this.shouldShoot = !this.shouldShoot
+    }
+    lastShot + this.shootingInterval < System.currentTimeMillis() && this.shouldShoot
+  }
+  def fire() = {
+    val c = this.holder
+    val p = this.owner
+    val b = new AK47Bullet(p, c.dir, c.position + Vector.polar(c.dir, c.radius*1.4))
+    
+    this.ammo -= 1
+    if(this.ammo == 0){
+      this.holder.weapon = new Colt45(this.owner)
+    }
+    this.lastShot = System.currentTimeMillis()
   }
 }
 

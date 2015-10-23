@@ -7,35 +7,23 @@
 import scala.swing.Graphics2D
 import Utils._
 
-class Bullet(owner : Player, val dir : Double, var position : Vector) extends GameObject(owner) {
-  private var lifetime = 2500L
+abstract class Bullet(owner : Player, val dir : Double, var position : Vector) extends GameObject(owner) {
+  val _lifetime : Long
   private val born = System.currentTimeMillis()
-  private var damage = 10
-  private var recFactor = 45.0
-  private var velFactor = 350.0
-  var timeAlive = 0
+  val _damage : Int
+  val _recoil : Int
   var shouldMove = true
-  velocity = Vector.polar(dir, this.velFactor) + this.owner.character.velocity
   
-  def recoil = this.velocity.unit*this.recFactor
+  GameObjectRoot.addGameObject(this)
   
-  def applyRecoil() = this.owner.character.velocity -= recoil
-  
-  def setWeaponAttr(lt : Long = 2500, dmg : Int = 10, velF : Double = 350.0, rec : Double = 45) = {
-    this.velFactor = velF
-    velocity = Vector.polar(dir, this.velFactor) + this.owner.character.velocity
-    this.lifetime = lt
-    this.damage = dmg
-    this.recFactor = rec
-  }
+  def recoil = this.velocity.unit*this._recoil
   
   override def paint(g : Graphics2D) = {
     g.drawLine(this.x, this.y, toInt(this.x-10*this.velocity.unit.x), toInt(this.y-10*this.velocity.unit.y))
-    //g.drawLine(this.x, this.y, toInt(this.x-10*cos(this.dir)), toInt(this.y-10*sin(this.dir)))
   }
   
   override def update(dt : Double) = {
-    if(System.currentTimeMillis() - this.born > this.lifetime){
+    if(System.currentTimeMillis() - this.born > this._lifetime){
       this.destroy(this.owner)
     }else{
       this.position = this.position + this.velocity*dt
@@ -43,7 +31,7 @@ class Bullet(owner : Player, val dir : Double, var position : Vector) extends Ga
         if(x.isInstanceOf[Hittable]){
           val c = x.asInstanceOf[Hittable] 
           if((this.position - c.position).abs <= c.radius){
-            c.takeHit(this.damage)
+            c.takeHit(this._damage)
             c.velocity += recoil
             if(c.health <= 0 && !c.shouldBeRemoved){
               c.destroy(this.owner)
