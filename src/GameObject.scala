@@ -19,7 +19,7 @@ trait Hittable {
   def radius : Int 
 }
 
-abstract class GameObject(val owner : Player) {
+abstract class GameObject(val ownerOp : Option[Player]) {
   var position : Vector
   var shouldBeRemoved = false
   var shouldMove : Boolean
@@ -58,7 +58,7 @@ abstract class GameObject(val owner : Player) {
 
 
 
-class Character(owner : Player) extends GameObject(owner) with Hittable {
+class Character(val owner : Player) extends GameObject(Some(owner)) with Hittable {
   var shouldMove = false
   var health = 100
   val maxHealth = 200
@@ -126,6 +126,10 @@ class Character(owner : Player) extends GameObject(owner) with Hittable {
   }
   
   def update(dt : Double) = {
+    /*if(this.owner.hasBeenAFKTooLong){
+      this.destroy(this.owner)
+    }*/
+    
     if(this.weapon.checkTrigger()){
       this.shoot()
     }

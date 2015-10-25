@@ -63,14 +63,21 @@ object GameObjectRoot {
     }
     
     var removed = Buffer[GameObject]()
+    var kickThese = Buffer[String]()
     for (go <- this.gameObjs){
-      go.update(dt)
       if(go.shouldBeRemoved){
        removed += go
+      }else{
+        go.update(dt)
+        if(go.ownerOp.isDefined && go.ownerOp.get.hasBeenAFKTooLong){
+          go.ownerOp.get.initKick()
+          kickThese += go.ownerOp.get.key
+        }
       }
     }
     
     this.gameObjs --= removed
+    this.players --= kickThese
     
     if(System.currentTimeMillis() > this.nextPowerupSpawnTime){
       this.gameObjs += Powerup.random()

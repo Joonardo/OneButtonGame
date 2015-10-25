@@ -14,7 +14,7 @@ import java.awt.geom.Ellipse2D
 import javax.imageio.ImageIO
 import Utils._
 
-abstract class Powerup extends GameObject(null) with Hittable {
+abstract class Powerup extends GameObject(None) with Hittable {
   val pic : Image
   var position = Rng.getPos()
   var shouldMove = false

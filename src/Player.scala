@@ -6,6 +6,8 @@
 
 //import scala.swing.event.Key.Value
 
+import Utils._
+
 class Player(val key : String) {
   var alive = true
   var died = 0L
@@ -25,8 +27,8 @@ class Player(val key : String) {
     }
   }
   
-  private var start : Long = 0
-  private var end : Long = 0
+  private var end : Long = System.currentTimeMillis()
+  private var start : Long = System.currentTimeMillis()
   
   def keyPressed() = {
     this.character.shouldMove = true
@@ -49,8 +51,24 @@ class Player(val key : String) {
       this.character = new Character(this)
       GameObjectRoot.addGameObject(this.character)
       this.alive = true
+      this.end = System.currentTimeMillis() // Prevent kicking
     }
   }
+  
+  def initKick() = this.character.shouldBeRemoved = true//GameObjectRoot.gameObjs.foreach { x => if(x.owner == this) x }
+  
+  def hasBeenAFKTooLong = !this.keyDown && this.alive && System.currentTimeMillis() - this.end > KickThreshold/*{
+    if(this.shouldUpdate){
+      this.start = System.currentTimeMillis()
+      this.shouldUpdate = false
+    }
+    if(System.currentTimeMillis() - this.start > KickThreshold){
+      this.shouldUpdate = true
+      true
+    }else{
+      false
+    }
+  }*/
   
   //def key = this.kh.key
 }

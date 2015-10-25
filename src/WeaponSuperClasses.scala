@@ -7,7 +7,7 @@
 import scala.swing.Graphics2D
 import Utils._
 
-abstract class Bullet(owner : Player, val dir : Double, var position : Vector) extends GameObject(owner) {
+abstract class Bullet(owner : Player, val dir : Double, var position : Vector) extends GameObject(Some(owner)) {
   val _lifetime : Long
   private val born = System.currentTimeMillis()
   val _damage : Int
