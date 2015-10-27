@@ -35,14 +35,18 @@ abstract class Powerup extends GameObject(None) with Hittable {
 }
 
 object Powerup {
-  final val powerups = Buffer[Class[_]](
-    classOf[HealthPackage],
-    classOf[WeaponPackage],
-    classOf[ScorePackage]
+  final val powerups = Buffer[Tuple2[Double, Class[_]]](
+    (0.25, classOf[HealthPackage]),
+    (0.75, classOf[WeaponPackage]),
+    (1.0, classOf[ScorePackage])
   )
   def random() = {
-    val v = round(Rng.getFloat()*(this.powerups.length-1))
-    powerups(v).newInstance().asInstanceOf[Powerup]
+    val v = Rng.getFloat()
+    var tmp = 0
+    while(powerups(tmp)._1 <= v){
+      tmp += 1
+    }
+    powerups(tmp)._2.newInstance().asInstanceOf[Powerup]
   }
 }
 
