@@ -87,9 +87,9 @@ class Character(val owner : Player) extends GameObject(Some(owner)) with Hittabl
     this.owner.alive = false
     this.owner.died = System.currentTimeMillis()
     if(this.owner != destroyer)
-      destroyer.score += 10
+      destroyer.score += 40
     else
-      destroyer.score -= 20
+      destroyer.score -= 30
   }
   
   def shoot() = this.weapon.fire()

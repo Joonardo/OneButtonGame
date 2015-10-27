@@ -1,4 +1,5 @@
 import math.round
+import scala.swing._
 
 object Utils {
   def toInt(a : Double) = round(a).asInstanceOf[Int]
