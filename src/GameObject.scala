@@ -5,6 +5,7 @@
  */
 
 import java.awt.{Color, Graphics2D}
+import Settings._
 import Utils._
 import java.util.Random
 import math.{Pi, round, cos, sin, pow, abs, signum}
@@ -60,10 +61,9 @@ abstract class GameObject(val ownerOp : Option[Player]) {
 
 class Character(val owner : Player) extends GameObject(Some(owner)) with Hittable {
   var shouldMove = false
-  var health = 100
-  val maxHealth = 200
+  var health = InitialHealth
   var position = Rng.getPos()
-  val maxVelocity = 300.0
+  //val maxVelocity = 300.0
   var angVel = 0.0
   val maxAngVel = 2.0
   var left = true
@@ -87,9 +87,9 @@ class Character(val owner : Player) extends GameObject(Some(owner)) with Hittabl
     this.owner.alive = false
     this.owner.died = System.currentTimeMillis()
     if(this.owner != destroyer)
-      destroyer.score += 40
+      destroyer.score += Bounty
     else
-      destroyer.score -= 30
+      destroyer.score -= SuicidePenalty
   }
   
   def shoot() = this.weapon.fire()
@@ -149,15 +149,15 @@ class Character(val owner : Player) extends GameObject(Some(owner)) with Hittabl
     //Move
     
     if(this.shouldMove){
-      this.velocity += Vector.polar(dir, 400*dt)
+      this.velocity += Vector.polar(dir, Acceleration*dt)
     }
-    this.velocity *= pow(.25, dt)
+    this.velocity *= pow(Friction, dt)
     this.position = this.position + this.velocity*dt
     
     this.dir = this.dir % (2*Pi)
     checkCollision()
-    if(this.health > this.maxHealth){
-      this.health = this.maxHealth
+    if(this.health > MaxHealth){
+      this.health = MaxHealth
     }
   }
 }

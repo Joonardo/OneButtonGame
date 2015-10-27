@@ -1,0 +1,13 @@
+<settings>
+	<score suicidePenalty="30" bounty="40"></score>
+	<character initialHealth="100" maxHealth="200" acceleration="400" friction="0.25" SpawnProtection="5"></character>
+	<weapon>
+		<AK47 ammo="100"></AK47>
+		<Shotgun ammo="15">
+		</Shotgun>
+		<Colt45 ammo="-1"></Colt45></weapon>
+	<powerup minTime="0" interval="3">
+		<ScorePackage score="30"></ScorePackage>
+		<WeaponPackage AK47="true" Shotgun="false"></WeaponPackage>
+		<HealthPackage health="40"></HealthPackage></powerup>
+	<player KickThreshold="15" RespawnTime="5"></player></settings>

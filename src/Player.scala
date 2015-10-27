@@ -6,12 +6,11 @@
 
 //import scala.swing.event.Key.Value
 
-import Utils._
+import Settings._
 
 class Player(val key : String) {
   var alive = true
   var died = 0L
-  val respawnTime = 5000 //5s
   var character = new Character(this)
   private var keyDown = false
   GameObjectRoot.addGameObject(this.character)
@@ -47,11 +46,11 @@ class Player(val key : String) {
   }
   
   def tryRespawn() = {
-    if(!this.alive && System.currentTimeMillis() - this.died > this.respawnTime){
+    if(!this.alive && System.currentTimeMillis() - this.died > RespawnTime){
       this.character = new Character(this)
       GameObjectRoot.addGameObject(this.character)
       this.alive = true
-      this.end = System.currentTimeMillis() // Prevent kicking
+      //this.end = System.currentTimeMillis() // Prevent kicking
     }
   }
   

@@ -13,6 +13,7 @@ import java.awt.{Color, Image}
 import java.awt.geom.Ellipse2D
 import javax.imageio.ImageIO
 import Utils._
+import Settings._
 
 abstract class Powerup extends GameObject(None) with Hittable {
   val pic : Image
@@ -40,7 +41,7 @@ object Powerup {
     classOf[ScorePackage]
   )
   def random() = {
-    val v = round(Rng.getFloat()*(powerups.size - 1))
+    val v = round(Rng.getFloat()*(this.powerups.length-1))
     powerups(v).newInstance().asInstanceOf[Powerup]
   }
 }
@@ -48,7 +49,7 @@ object Powerup {
 class HealthPackage extends Powerup {
   val pic = ImageIO.read(new File("src/Media/HealthPackage.png"))
   def collect(c : Character) = {
-    c.health += 40
+    c.health += ((PowerupAttr(this.getClass) \ "@health") text).toInt
     this.destroy(c.owner)
   }
 }
@@ -74,14 +75,19 @@ object WeaponsDealer {
   )
   
   def deal() = {
-    this.weapons(toInt((this.weapons.length - 1)*Rng.getFloat())).asInstanceOf[Class[Weapon]]
+    var tmp = EnabledWeapons
+    /*val xml = WeaponAttr(classOf[])
+    for(w <- this.weapons){
+      if(
+    }*/
+    tmp(toInt((tmp.length - 1)*Rng.getFloat())).asInstanceOf[Class[Weapon]]
   }
 }
 
 class ScorePackage extends Powerup {
   val pic = ImageIO.read(new File("src/Media/ScorePackage.png"))
   def collect(c : Character) = {
-    c.owner.score += 30
+    c.owner.score += ((PowerupAttr(this.getClass) \ "@score") text).toInt
     this.destroy(c.owner)
   }
 }

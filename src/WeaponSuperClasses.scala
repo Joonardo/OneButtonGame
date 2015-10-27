@@ -6,6 +6,7 @@
 
 import scala.swing.Graphics2D
 import Utils._
+import Settings._
 
 abstract class Bullet(owner : Player, val dir : Double, var position : Vector) extends GameObject(Some(owner)) {
   val _lifetime : Long
@@ -46,7 +47,7 @@ abstract class Bullet(owner : Player, val dir : Double, var position : Vector) e
 }
 
 abstract class Weapon(owner : Player) {
-  var ammo : Int
+  var ammo = Ammo(this.getClass)
   val shootingThreshold = 200L
   def holder = owner.character
   def fire() : Unit

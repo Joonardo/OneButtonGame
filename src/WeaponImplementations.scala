@@ -8,7 +8,6 @@
 import scala.collection.mutable.Buffer
 
 class Colt45(owner : Player) extends Weapon(owner) {
-  var ammo = -1
   def fire() = {
     val c = this.holder
     val p = this.owner
@@ -17,7 +16,6 @@ class Colt45(owner : Player) extends Weapon(owner) {
 }
 
 class Shotgun(owner : Player) extends Weapon(owner) {
-  var ammo = 15
   val scattering = math.Pi/6.0
   def fire() = {
     this.ammo -= 1
@@ -40,7 +38,6 @@ class Shotgun(owner : Player) extends Weapon(owner) {
 }
 
 class AK47(owner : Player) extends Weapon(owner) {
-  var ammo = 100
   var shouldShoot = false
   val shootingInterval = 50L
   private var lastShot = System.currentTimeMillis()
@@ -64,5 +61,4 @@ class AK47(owner : Player) extends Weapon(owner) {
 }
 
 abstract class MissileLauncher(owner : Player) extends Weapon(owner){
-  ammo = 3
 }
