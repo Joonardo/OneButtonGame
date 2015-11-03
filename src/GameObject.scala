@@ -17,7 +17,7 @@ trait Hittable {
   var health : Int
   var position : Vector
   var velocity : Vector
-  def radius : Int 
+  def radius : Int
 }
 
 abstract class GameObject(val ownerOp : Option[Player]) {
@@ -29,8 +29,8 @@ abstract class GameObject(val ownerOp : Option[Player]) {
   var velocity = Vector.normal(0, 0)
   def radius = toInt(this.diameter/2)
   
-  def paint(g : Graphics2D) : Unit
-  def update(dt : Double) : Unit
+  def paint(g : Graphics2D) : Unit//
+  def update(dt : Double) : Unit//
   
   def destroy(destroyer : Player) : Unit = this.shouldBeRemoved = true
   
@@ -156,6 +156,7 @@ class Character(val owner : Player) extends GameObject(Some(owner)) with Hittabl
     
     this.dir = this.dir % (2*Pi)
     checkCollision()
+    //println(this.position)
     if(this.health > MaxHealth){
       this.health = MaxHealth
     }

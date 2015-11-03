@@ -19,6 +19,7 @@ class Vector(val x : Double, val y : Double) {
 }
 
 object Vector {
+  def apply(v : Vector) = new Vector(v.x, v.y)
   def normal(x : Double, y : Double) = new Vector(x, y)
   def polar(a : Double, abs : Double) = new Vector(cos(a), sin(a))*abs
   def angleBetween(v1 : Vector, v2 : Vector) = acos((v1.abs*v2.abs)/(v1*v2))

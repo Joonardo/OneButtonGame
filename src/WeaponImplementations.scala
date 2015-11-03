@@ -9,9 +9,8 @@ import scala.collection.mutable.Buffer
 
 class Colt45(owner : Player) extends Weapon(owner) {
   def fire() = {
-    val c = this.holder
     val p = this.owner
-    val b = new Caliper45(p, c.dir, c.position + Vector.polar(c.dir, c.radius*1.4))
+    new Caliper45(p)
   }
 }
 
@@ -26,9 +25,8 @@ class Shotgun(owner : Player) extends Weapon(owner) {
     val slugs = Buffer[Slug]()
     for (_ <- 0 until 15){
       val newDir = this.holder.dir + this.scattering*(Rng.getFloat() - 1)
-      val c = this.holder
       val p = this.owner
-      val b = new Slug(p, newDir, c.position + Vector.polar(c.dir, c.radius*1.4))
+      val b = new Slug(p)
       slugs += b
     }
     for(b <- slugs){
@@ -48,15 +46,25 @@ class AK47(owner : Player) extends Weapon(owner) {
     lastShot + this.shootingInterval < System.currentTimeMillis() && this.shouldShoot
   }
   def fire() = {
-    val c = this.holder
     val p = this.owner
-    val b = new AK47Bullet(p, c.dir, c.position + Vector.polar(c.dir, c.radius*1.4))
+    new AK47Bullet(p)
     
     this.ammo -= 1
     if(this.ammo == 0){
       this.holder.weapon = new Colt45(this.owner)
     }
     this.lastShot = System.currentTimeMillis()
+  }
+}
+
+class Mines(owner : Player) extends Weapon(owner){
+  def fire() = {
+    new Mine(this.owner)
+    
+    this.ammo -= 1
+    if(this.ammo == 0){
+      this.holder.weapon = new Colt45(this.owner)
+    }
   }
 }
 

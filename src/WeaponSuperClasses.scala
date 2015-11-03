@@ -8,7 +8,9 @@ import scala.swing.Graphics2D
 import Utils._
 import Settings._
 
-abstract class Bullet(owner : Player, val dir : Double, var position : Vector) extends GameObject(Some(owner)) {
+abstract class Bullet(owner : Player) extends GameObject(Some(owner)) {
+  val char = this.owner.character
+  var position = char.position + Vector.polar(char.dir, char.radius*1.4)
   val _lifetime : Long
   private val born = System.currentTimeMillis()
   val _damage : Int
@@ -31,10 +33,10 @@ abstract class Bullet(owner : Player, val dir : Double, var position : Vector) e
       GameObjectRoot.gameObjs.foreach { x => {
         if(x.isInstanceOf[Hittable]){
           val c = x.asInstanceOf[Hittable] 
-          if((this.position - c.position).abs <= c.radius){
+          if((this.position - c.position).abs <= c.radius && !c.shouldBeRemoved){
             c.takeHit(this._damage)
             c.velocity += recoil
-            if(c.health <= 0 && !c.shouldBeRemoved){
+            if(c.health <= 0){
               c.destroy(this.owner)
             }
             this.destroy(this.owner)

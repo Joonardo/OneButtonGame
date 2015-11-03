@@ -5,9 +5,10 @@
 		<AK47 ammo="100"></AK47>
 		<Shotgun ammo="15">
 		</Shotgun>
-		<Colt45 ammo="-1"></Colt45></weapon>
+		<Colt45 ammo="-1"></Colt45>
+		<Mines ammo="5"></Mines></weapon>
 	<powerup minTime="0" interval="3">
 		<ScorePackage score="30"></ScorePackage>
-		<WeaponPackage AK47="true" Shotgun="false"></WeaponPackage>
+		<WeaponPackage AK47="false" Shotgun="false" Mines="true"></WeaponPackage>
 		<HealthPackage health="40"></HealthPackage></powerup>
 	<player KickThreshold="15" RespawnTime="5"></player></settings>
