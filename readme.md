@@ -8,6 +8,6 @@ TODO
 
 More weapons (Added shotgun & AK47)
 Controlling over TCP/IP sockets (Merged)
-Scoreboard (Done
-Settings
+Scoreboard (Done)
+Settings (Partially Done)
 More game modes (not only deathmatch :P)
