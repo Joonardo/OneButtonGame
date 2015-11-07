@@ -23,10 +23,10 @@ class Shotgun(owner : Player) extends Weapon(owner) {
     }
     
     val slugs = Buffer[Slug]()
-    for (_ <- 0 until 15){
+    for (_ <- 0 until 25){
       val newDir = this.holder.dir + this.scattering*(Rng.getFloat() - 1)
       val p = this.owner
-      val b = new Slug(p)
+      val b = new Slug(p, newDir)
       slugs += b
     }
     for(b <- slugs){
@@ -37,7 +37,7 @@ class Shotgun(owner : Player) extends Weapon(owner) {
 
 class AK47(owner : Player) extends Weapon(owner) {
   var shouldShoot = false
-  val shootingInterval = 50L
+  val shootingInterval = 20L
   private var lastShot = System.currentTimeMillis()
   override def checkTrigger() = {
     if(this.owner.pressedTime.getOrElse(1000L) < this.shootingThreshold){

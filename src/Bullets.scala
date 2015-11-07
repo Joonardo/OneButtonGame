@@ -12,12 +12,12 @@ class Caliper45(owner : Player, dir : Option[Double] = None) extends Bullet(owne
   this.owner.character.velocity -= this.recoil
 }
 
-class Slug(owner : Player) extends Bullet(owner) { //For shotgun
+class Slug(owner : Player, dir : Double) extends Bullet(owner) { //For shotgun
   val _damage = 10
   val _lifetime = 800L
   val _velocity = 600*(Rng.getFloat() + 0.5)
   val _recoil = 10
-  velocity = Vector.polar(this.char.dir, _velocity) + this.char.velocity
+  velocity = Vector.polar(dir, _velocity) + this.char.velocity
   
   def applyRecoil() = this.char.velocity -= this.recoil
 }
