@@ -76,6 +76,7 @@ class Mine(owner : Player) extends GameObject(Some(owner)) with Hittable {
       g.fillOval(this.x - this.radius, this.y -this.radius, 2*this.radius, 2*this.radius)
     else*/
     g.drawOval(this.x - this.radius, this.y -this.radius, 2*this.radius, 2*this.radius)
+    g.setColor(c)
   }
 }
 
